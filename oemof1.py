@@ -23,7 +23,7 @@ except ImportError:
     
 solver = 'cbc'  # 'glpk', 'gurobi',....
 debug = False  # Set number_of_timesteps to 3 to get a readable lp-file.
-number_of_time_steps = 24*7*52   #stündlich    entspricht mit 8760
+number_of_time_steps = 52560   #stündlich    entspricht mit 8760
 solver_verbose = False  #eventuell raus
 
 # initiate the logger (see the API docs for more information)
@@ -38,7 +38,7 @@ date_time_index = pd.date_range('1/1/2018', periods=number_of_time_steps,
 energysystem = solph.EnergySystem(timeindex=date_time_index)
 
 # Read data file
-filename = os.path.join(os.path.dirname(__file__), 'Haushalt1.csv')
+filename = os.path.join(os.path.dirname(__file__), 'QuartierHH.csv')
 data = pd.read_csv(filename)
 
 logging.info('Create oemof objects')
@@ -54,7 +54,7 @@ energysystem.add(bel)
 
 
 energysystem.add(solph.Source(label='pv', outputs={bel: solph.Flow(
-    actual_value=data['pv'], nominal_value=2.5, fixed=True)}))
+    actual_value=data['pv'], nominal_value=1, fixed=True)}))
     
 # Überproduktion die nicht in einer Batterie gespeichert wird, wird ins Netz eingespeist #    
     
@@ -69,18 +69,18 @@ energysystem.add(solph.Source(label='Netzbezug',
 # Strombedarf stündlich aufgelistet mit dem LoadProfileGenerator erstellt
 
 energysystem.add(solph.Sink(label='Stromverbrauch', inputs={bel: solph.Flow(
-    actual_value=data['Last'], fixed=True, nominal_value=1)})) 
+    actual_value=data['LAST_EFH'], fixed=True, nominal_value=1)})) 
 
 # Batterie mit nominal capacity in kWh. Nominal_capacity=10 entspricht 10kWh Kapazität.
-# Wirkungsgrad 80%    
+    
     
 storage = solph.components.GenericStorage(
-    nominal_capacity=10,
+    nominal_capacity=3,
     label='storage',
     inputs={bel: solph.Flow(nominal_value=10)},
     outputs={bel: solph.Flow(nominal_value=10, variable_costs=0.001)},
     capacity_loss=0.00, initial_capacity=None,
-    inflow_conversion_factor=1, outflow_conversion_factor=0.8,)
+    inflow_conversion_factor=1, outflow_conversion_factor=1,)
 
 energysystem.add(storage)    
    
@@ -123,24 +123,24 @@ custom_storage = outputlib.views.node(results, 'storage')
 demand = outputlib.views.node(results, 'Stromverbrauch')
 
 
-if plt is not None:
-    fig, ax = plt.subplots(figsize=(10,5))
-    custom_storage['sequences'].plot(ax=ax, kind='line', drawstyle='steps-post')
-    plt.legend(loc='upper center', prop={'size':8}, bbox_to_anchor=(0.5, 1.25), ncol=2)
-    fig.subplots_adjust(top=0.8)
-    plt.show()
-
-    fig, ax = plt.subplots(figsize=(10,5))
-    electricity_bus['sequences'].plot(ax=ax, kind='line', drawstyle='steps-post')
-    plt.legend(loc='upper center', prop={'size':8}, bbox_to_anchor=(0.5, 1.3), ncol=2)
-    fig.subplots_adjust(top=0.8)
-    plt.show()
-
-    fig, ax = plt.subplots(figsize=(10,5))
-    demand['sequences'].plot(ax=ax, kind='line', drawstyle='steps-post')
-    plt.legend(loc='upper center', prop={'size':8}, bbox_to_anchor=(0.5, 1.3), ncol=2)
-    fig.subplots_adjust(top=0.8)
-    plt.show()
+#if plt is not None:
+#    fig, ax = plt.subplots(figsize=(10,5))
+#    custom_storage['sequences'].plot(ax=ax, kind='line', drawstyle='steps-post')
+#    plt.legend(loc='upper center', prop={'size':8}, bbox_to_anchor=(0.5, 1.25), ncol=2)
+#    fig.subplots_adjust(top=0.8)
+#    plt.show()
+#
+#    fig, ax = plt.subplots(figsize=(10,5))
+#    electricity_bus['sequences'].plot(ax=ax, kind='line', drawstyle='steps-post')
+#    plt.legend(loc='upper center', prop={'size':8}, bbox_to_anchor=(0.5, 1.3), ncol=2)
+#    fig.subplots_adjust(top=0.8)
+#    plt.show()
+#
+#    fig, ax = plt.subplots(figsize=(10,5))
+#    demand['sequences'].plot(ax=ax, kind='line', drawstyle='steps-post')
+#    plt.legend(loc='upper center', prop={'size':8}, bbox_to_anchor=(0.5, 1.3), ncol=2)
+#    fig.subplots_adjust(top=0.8)
+#    plt.show()
 
 # print the sums of the flows around the electricity bus
 print('********* Main results *********')
