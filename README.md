@@ -1,5 +1,11 @@
 # Haushalt1
 
+Update:
+Wetter und Lastdaten sind aktualisiert. Die Berechnung erfolgt 10minütig. Die Modellierung kann zwischen einem Einfamilienhaus mit 2 Erwachsenen + 1 Kind oder den kumulierten Lastprofilen aller Haushalte des Quartiers unterschieden werden.
+Oemof1 nutzt die oemof.solph Struktur während Algorhytmus1 das Energiesystem auf numerischer Basis simuliert. Beide Scripte erstellen diesselben Ergebnisse, wobei die numerische Variante schnellere Rechenzeiten hervorbringt und freier angepasst werden kann.
+
+
+
 Hallo!
 
 Ein erster Oemof Draft zur Darstellung eines Haushalts mit einer PV Anlage und einem Batteriespeicher.
