@@ -1,4 +1,9 @@
 # Haushalt1
+Update 20.02:
+Die Simulation läuft jetzt parallel über einen einstellbaren Bereich von PV Anlagengrößen. Ergebnisse werden als Matrix ausgegeben.
+Kleine Anpassungen am System, wie Batteriewirkungsgrad & Systemwirkungsggrad wurden hinzugefügt. 
+
+
 
 Update:
 Wetter und Lastdaten sind aktualisiert. Die Berechnung erfolgt 10minütig. Die Modellierung kann zwischen einem Einfamilienhaus mit 2 Erwachsenen + 1 Kind oder den kumulierten Lastprofilen aller Haushalte des Quartiers unterschieden werden.
